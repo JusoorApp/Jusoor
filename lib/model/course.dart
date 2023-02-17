@@ -1,14 +1,17 @@
-import 'package:flutter/material.dart' show Color;
+import 'package:flutter/material.dart';
+
 
 class Course {
   final String title, description, iconSrc;
   final Color color;
+  final Function? onPressed;
 
   Course({
     required this.title,
     this.description = 'Build and animate an iOS app from scratch',
     this.iconSrc = "assets/icons/ios.svg",
     this.color = const Color(0xFF7553F6),
+    this.onPressed,
   });
 }
 
