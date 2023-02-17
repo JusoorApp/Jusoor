@@ -20,7 +20,7 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: ChatAppbar(),
       backgroundColor: backgroundColorLight,
       body: Padding(
-        padding: const EdgeInsets.only(bottom: 90),
+        padding: const EdgeInsets.only(bottom: 73),
         child: SingleChildScrollView(
             reverse: true,
             child: Column(
