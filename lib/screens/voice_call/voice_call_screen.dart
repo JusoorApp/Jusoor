@@ -1,6 +1,5 @@
 import 'package:agora_uikit/agora_uikit.dart';
 import 'package:flutter/material.dart';
-import 'package:rive_animation/screens/home/home_screen.dart';
 
 const appId = 'a16cee9f3e3e4378a13dc886078c0913';
 String channelName = 'test1';
@@ -54,9 +53,7 @@ class _State extends State<JoinChannelAudio> {
                 disconnectButtonChild: GestureDetector(
                     onTap: () {
                       print("hi");
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: ((context) {
-                        return const HomePage();
-                      })));
+                      Navigator.of(context).pop();
                     },
                     child: const Icon(Icons.phone)),
                 onDisconnect: () {},

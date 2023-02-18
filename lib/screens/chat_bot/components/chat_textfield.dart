@@ -2,21 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rive_animation/constants.dart';
-import 'package:rive_animation/screens/chat/doctor.dart';
 import 'package:rive_animation/screens/chat_bot/chat_message.dart';
 import 'package:rive_animation/usesr_provider.dart';
 
-class ChatTextfield extends ConsumerStatefulWidget {
-  const ChatTextfield({super.key, required this.doctor});
-
-  final Doctor doctor;
+class ChatBotTextField extends ConsumerStatefulWidget {
+  const ChatBotTextField({super.key});
 
   @override
-  ConsumerState<ChatTextfield> createState() => _ChatTextfieldState();
+  ConsumerState<ChatBotTextField> createState() => _ChatBotTextFieldState();
 }
 
-class _ChatTextfieldState extends ConsumerState<ChatTextfield> {
-  final TextEditingController chatController = TextEditingController();
+class _ChatBotTextFieldState extends ConsumerState<ChatBotTextField> {
+  TextEditingController messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +21,10 @@ class _ChatTextfieldState extends ConsumerState<ChatTextfield> {
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Stack(
+          alignment: AlignmentDirectional.topCenter,
           children: [
             TextField(
-              controller: chatController,
+              controller: messageController,
               decoration: InputDecoration(
                 hintText: "Type a message",
                 hintStyle: Theme.of(context)
@@ -37,8 +35,8 @@ class _ChatTextfieldState extends ConsumerState<ChatTextfield> {
               ),
             ),
             Positioned(
-              top: 10,
               right: 10,
+              top: 10,
               child: Container(
                 height: 40,
                 width: 40,
@@ -48,13 +46,12 @@ class _ChatTextfieldState extends ConsumerState<ChatTextfield> {
                 ),
                 child: GestureDetector(
                   onTap: () async {
-                    final message =
-                        ChatMessage(message: chatController.text, uid: ref.read(userProvider)?.uid ?? "", isBot: false)
-                            .toJson();
+                    final message = ChatMessage(
+                            message: messageController.text, uid: ref.read(userProvider)?.uid ?? "a", isBot: false)
+                        .toJson();
                     message["created_at"] = Timestamp.now();
-                    message["doctorId"] = widget.doctor.uid;
-                    chatController.clear();
-                    await FirebaseFirestore.instance.collection("DoctorChats").doc().set(message);
+                    messageController.clear();
+                    await FirebaseFirestore.instance.collection("chats").doc().set(message);
                   },
                   child: const Icon(
                     Icons.send,

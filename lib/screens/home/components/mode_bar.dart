@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rive_animation/screens/home/home_screen.dart';
 
-class ModeBar extends StatefulWidget {
+class ModeBar extends ConsumerStatefulWidget {
   const ModeBar(this.percent);
   final double percent;
 
   @override
-  State<ModeBar> createState() => _ModeBarState();
+  ConsumerState<ModeBar> createState() => _ModeBarState();
 }
 
-class _ModeBarState extends State<ModeBar> {
+class _ModeBarState extends ConsumerState<ModeBar> {
   late double width;
   @override
   void initState() {
@@ -23,6 +25,8 @@ class _ModeBarState extends State<ModeBar> {
 
   @override
   Widget build(BuildContext context) {
+    final percent = ref.watch(avgProvider);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -56,20 +60,30 @@ class _ModeBarState extends State<ModeBar> {
                       Radius.circular(20),
                     )),
                 child: const Text("")),
-            AnimatedContainer(
-                curve: Curves.easeInOut,
-                duration: const Duration(milliseconds: 500),
-                height: 50,
-                width: width,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-                decoration: BoxDecoration(
-                    color: widget.percent < 0.25
-                        ? Colors.pink.shade50
-                        : widget.percent <= 0.7
-                            ? Colors.lightBlue.shade100
-                            : Colors.green.shade100,
-                    borderRadius: const BorderRadius.all(Radius.circular(20))),
-                child: const Text("")),
+            percent.when(
+              loading: () {
+                return const SizedBox.shrink();
+              },
+              error: (error, stackTrace) {
+                return const SizedBox.shrink();
+              },
+              data: (data) {
+                return AnimatedContainer(
+                    curve: Curves.easeInOut,
+                    duration: const Duration(milliseconds: 500),
+                    height: 50,
+                    width: data * (MediaQuery.of(context).size.width - 40),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                    decoration: BoxDecoration(
+                        color: data < 0.25
+                            ? Colors.pink.shade50
+                            : data <= 0.7
+                                ? Colors.lightBlue.shade100
+                                : Colors.green.shade100,
+                        borderRadius: const BorderRadius.all(Radius.circular(20))),
+                    child: const Text(""));
+              },
+            ),
             Center(
                 child: Text(
               widget.percent < 0.25

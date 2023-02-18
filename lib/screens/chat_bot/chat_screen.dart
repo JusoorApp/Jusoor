@@ -5,45 +5,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rive_animation/constants.dart';
-import 'package:rive_animation/screens/chat/components/chat_app_bar.dart';
 import 'package:rive_animation/screens/chat/components/chat_element.dart';
-import 'package:rive_animation/screens/chat/doctor.dart';
 import 'package:rive_animation/screens/chat_bot/chat_message.dart';
+import 'package:rive_animation/screens/chat_bot/components/chat_app_bar.dart';
 import 'package:rive_animation/usesr_provider.dart';
 
 import 'components/chat_textfield.dart';
 
-final doctorChatProvider = StreamProvider.family<List<ChatMessage>, String>((ref, doctorId) {
+final chatBotProvider = StreamProvider<List<ChatMessage>>((ref) {
   final docs = FirebaseFirestore.instance
-      .collection("DoctorChats")
+      .collection("chats")
       .where("uid", isEqualTo: ref.read(userProvider)?.uid ?? '')
-      .where("doctorId", isEqualTo: doctorId)
       .orderBy("created_at", descending: false)
       .snapshots();
   final messages = docs.map((event) => event.docs.map((e) => ChatMessage.fromJson(e.data())).toList());
-  print(messages);
   return messages;
 });
 
-class ChatScreen extends ConsumerStatefulWidget {
-  const ChatScreen({super.key, required this.doctor});
-
-  final Doctor doctor;
+class ChatBotScreen extends ConsumerStatefulWidget {
+  const ChatBotScreen({super.key});
 
   @override
-  ConsumerState<ChatScreen> createState() => _ChatScreenState();
+  ConsumerState<ChatBotScreen> createState() => _ChatBotScreenState();
 }
 
-class _ChatScreenState extends ConsumerState<ChatScreen> {
+class _ChatBotScreenState extends ConsumerState<ChatBotScreen> {
   @override
   Widget build(BuildContext context) {
-    final messages = ref.watch(doctorChatProvider(widget.doctor.uid));
+    final messages = ref.watch(chatBotProvider);
 
     // ignore: prefer_const_constructors
     return Scaffold(
-      appBar: ChatAppbar(
-        doctor: widget.doctor,
-      ),
+      appBar: const ChatBotAppbar(),
       backgroundColor: backgroundColorLight,
       body: Padding(
         padding: const EdgeInsets.only(bottom: 73),
@@ -53,7 +46,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: const [
-                Text("Loading!"),
+                Text("Loading Eve!"),
                 CircularProgressIndicator(),
               ],
             );
@@ -71,13 +64,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       ] +
                       (data.isEmpty
                               ? [
-                                  Center(
+                                  const Center(
                                       child: Padding(
-                                    padding: const EdgeInsets.only(top: 200, left: 30, right: 30),
+                                    padding: EdgeInsets.only(top: 200, left: 30, right: 30),
                                     child: Text(
-                                      "No messages yet between you and ${widget.doctor.name}, type any thing.",
+                                      "Hey I'm Eve, I will be here always to help you 💙.",
                                       textAlign: TextAlign.center,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 30,
                                         fontWeight: FontWeight.w700,
                                         fontFamily: "Poppins",
@@ -97,9 +90,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           },
         ),
       ),
-      bottomSheet: ChatTextfield(
-        doctor: widget.doctor,
-      ),
+      bottomSheet: const ChatBotTextField(),
     );
   }
 }

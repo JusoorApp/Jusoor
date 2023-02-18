@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rive_animation/screens/chat/doctors_screen.dart';
+import 'package:rive_animation/screens/chat_bot/chat_screen.dart';
 import 'package:rive_animation/usesr_provider.dart';
 
 import '../../model/course.dart';
@@ -26,7 +28,9 @@ final avgProvider = FutureProvider<double>((ref) async {
     total += element.data()['mode'];
   }
 
-  return total / count;
+  final avg = total / (count * 9);
+  print(avg);
+  return avg;
 });
 
 class HomePage extends ConsumerWidget {
@@ -100,12 +104,25 @@ class HomePage extends ConsumerWidget {
                       .map(
                         (course) => Padding(
                           padding: const EdgeInsets.only(left: 20),
-                          child: CourseCard(
-                            title: course.title,
-                            discription: course.description,
-                            iconSrc: course.iconSrc,
-                            color: course.color,
-                          ).animate().slideX(duration: 500.ms).fade(duration: 500.ms),
+                          child: GestureDetector(
+                            onTap: () {
+                              if (course.title == "Talk to our chatbot") {
+                                Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
+                                  return const ChatBotScreen();
+                                })));
+                              } else {
+                                Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
+                                  return const DoctorsScreen();
+                                })));
+                              }
+                            },
+                            child: CourseCard(
+                              title: course.title,
+                              discription: course.description,
+                              iconSrc: course.iconSrc,
+                              color: course.color,
+                            ).animate().slideX(duration: 500.ms).fade(duration: 500.ms),
+                          ),
                         ),
                       )
                       .toList(),
