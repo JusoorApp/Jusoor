@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rive_animation/screens/chat/chat_screen.dart';
 
 import '../../model/course.dart';
 import 'components/course_card.dart';
@@ -10,7 +11,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return
+    Scaffold(
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
@@ -30,14 +32,20 @@ class HomePage extends StatelessWidget {
                           style: Theme.of(context)
                               .textTheme
                               .headlineMedium!
-                              .copyWith(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 25),
+                              .copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25),
                         ),
                         Text(
                           "Nawaf!",
                           style: Theme.of(context)
                               .textTheme
                               .headlineMedium!
-                              .copyWith(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 20),
+                              .copyWith(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
                         ),
                       ],
                     ),
@@ -72,15 +80,14 @@ class HomePage extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 child: Text(
                   "Recent",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineSmall!
-                      .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                      color: Colors.black, fontWeight: FontWeight.bold),
                 ),
               ),
               ...recentCourses
                   .map((course) => Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                        padding: const EdgeInsets.only(
+                            left: 20, right: 20, bottom: 20),
                         child: SecondaryCourseCard(
                           title: course.title,
                           iconsSrc: course.iconSrc,
